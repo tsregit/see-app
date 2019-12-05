@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>SSE demo</title>
+	<meta name=viewport content="width=device-width, initial-scale=1, user-scalable=no">
+	<link rel="icon" href="data:;base64,iVBORw0KGgo=">
+	<style>
+		body {
+			margin: 20px;
+		}
+		.layout {
+            width: 60%;
+		}
+		section {
+			display: flex;
+			flex-flow: row;
+		}
+		.channel {
+			flex: 0 0 50%;
+			margin: 10px;
+		}
+		.eventlog {
+			border: 1px solid #ddd;
+		  overflow: scroll;
+			height: 200px;
+		}
+	</style>
+</head>
+<body class='online'>
+	<div class="layout">
+
+	<h1>SSE pubsub for nodeJS</h1>
+
+	<p>SSE Streams.</p>
+
+	<section>
+		<div class='channel'>
+			<h2>Channel 74-2</h2>
+			<div class='eventlog' id="74-2" data-channel='stream'></div>
+		</div>
+		<div class='channel'>
+			<h2>Channel 75-2</h2>
+			<div class='eventlog' id="75-2" data-channel='stream'></div>
+		</div>
+		<div class='channel'>
+			<h2>Channel 101-4</h2>
+			<div class='eventlog' id="101-4" data-channel='stream'></div>
+		</div>
+	</section>
+	</div>
+</body>
+<script>
+	Array.from(document.querySelectorAll('[data-channel]')).forEach(el => {
+		const channelName = el.dataset.channel;
+		const es = new EventSource("https://qa-apigw-ccc.falabella.com/dev/backroom/"+channelName,{withCredentials: true});
+		es.addEventListener('74-2-create', ev => {
+            const element = document.getElementById('74-2');
+            element.innerHTML = ev.data;
+        });
+        es.addEventListener('75-2-create', ev => {
+            const element = document.getElementById('75-2');
+            element.innerHTML = ev.data;
+        });
+        es.addEventListener('101-4-create', ev => {
+            const element = document.getElementById('101-4');
+            element.innerHTML = data;
+		});
+	});
+</script>
+</html>
